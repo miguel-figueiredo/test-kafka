@@ -1,29 +1,29 @@
 package com.talkdesk.tdx.nlp.transcription;
 
+import java.io.*;
 import java.util.*;
-import javax.json.bind.JsonbBuilder;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
 
-public class ObjectSerializer implements Serializer<Object> {
+public class ObjectSerializer implements Serializer<Serializable> {
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
 
     }
 
     @Override
-    public byte[] serialize(String s, Object o) {
+    public byte[] serialize(String s, Serializable o) {
         return serialize(o);
     }
 
     @Override
-    public byte[] serialize(String topic, Headers headers, Object data) {
+    public byte[] serialize(String topic, Headers headers, Serializable data) {
         return serialize(data);
     }
 
-    private byte[] serialize(Object o) {
-        return JsonbBuilder.create().toJson(o).getBytes();
+    private byte[] serialize(Serializable o) {
+        return SerializationUtils.serialize(o);
     }
 
     @Override
