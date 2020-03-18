@@ -1,4 +1,4 @@
-package com.talkdesk.tdx.nlp.price;
+package com.talkdesk.tdx.nlp.chat;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +12,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import javax.websocket.Session;
 
+// TODO: the goal was to get messages from kafka and deliver them using websockets.
 @ServerEndpoint("/chat/{username}")         
 @ApplicationScoped
 public class ChatSocket {
