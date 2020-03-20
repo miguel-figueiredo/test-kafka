@@ -15,11 +15,7 @@ public class TranscriptionProcessor {
     @Incoming("transcriptions")
     public CompletionStage<Void> processTranscription(KafkaMessage<String, Transcription> message) {
         return CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep((long)(Math.random() * 2000));
-            } catch (InterruptedException e) {
-                LOGGER.error("Sleep was interrupted", e);
-            }
+            //sleep();
             LOGGER.info("Processing transcription from partition {}: {} - {}",
                 message.getPartition(), message.getPayload().getId(), message.getPayload().getText());
         });
@@ -28,13 +24,17 @@ public class TranscriptionProcessor {
     @Incoming("transcription-states")
     public CompletionStage<Void> processTranscriptionState(KafkaMessage<String, TranscriptionState> message) {
         return CompletableFuture.runAsync(() -> {
-            try {
-                Thread.sleep((long)(Math.random() * 2000));
-            } catch (InterruptedException e) {
-                LOGGER.error("Sleep was interrupted", e);
-            }
+            //sleep();
             LOGGER.info("Processing transcription state from partition {}: {} - {}",
                 message.getPartition(), message.getPayload().getId(), message.getPayload().getState());
         });
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep((long) (Math.random() * 2000));
+        } catch (InterruptedException e) {
+            LOGGER.error("Sleep was interrupted", e);
+        }
     }
 }
