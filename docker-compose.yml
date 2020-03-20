@@ -31,3 +31,10 @@ services:
       - ./zk-single-kafka-single/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zoo1
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    hostname: kafdrop
+    environment:
+      KAFKA_BROKERCONNECT: ${DOCKER_HOST_IP:-127.0.0.1}:9092
+    ports:
+      - "9000:9000"
