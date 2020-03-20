@@ -15,9 +15,9 @@ mvn io.quarkus:quarkus-maven-plugin:1.2.1.Final:create -DprojectGroupId=com.talk
 
 Run:
 
-``
+```
 mvn quarkus:dev
-``
+```
 
 Webpages:
 
@@ -28,12 +28,13 @@ Create Producer and Consumer with partition based on the payload:
 
 ```
 kafka-topics --create --topic transcriptions -zookeeper localhost:2181 --replication-factor 1 --partitions 4
-
+```
 
 Useful commands:
 
-``
-kafka-topics --list -zookeeper localhost:2181
-kafka-topics --describe --topic transcriptions -zookeeper localhost:2181
+```
+kafka-topics --list --zookeeper localhost:2181
+kafka-topics --describe --topic transcriptions --zookeeper localhost:2181
+kafka-console-consumer --topic transcriptions --bootstrap-server localhost:9092
 ```
 
