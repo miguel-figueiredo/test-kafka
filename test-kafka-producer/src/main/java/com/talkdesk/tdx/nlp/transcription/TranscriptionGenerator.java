@@ -18,23 +18,19 @@ public class TranscriptionGenerator {
     }
 
     @Outgoing("generated-transcription-state")
-    public Flowable<KafkaMessage<String, Transcription>> generateTranscriptionState() {
+    public Flowable<KafkaMessage<String, TranscriptionState>> generateTranscriptionState() {
         return Flowable.interval(1, TimeUnit.SECONDS)
             .map(tick -> getTranscriptionState());
     }
 
     private KafkaMessage<String, Transcription> getTranscription() {
-        Transcription transcription = createTranscription();
+        Transcription transcription = new Transcription(getId(), getSentence());
         return KafkaMessage.of(transcription.getId(), transcription);
     }
 
-    private KafkaMessage<String, Transcription> getTranscriptionState() {
-        Transcription transcription = createTranscription();
+    private KafkaMessage<String, TranscriptionState> getTranscriptionState() {
+        TranscriptionState transcription = new TranscriptionState(getId());
         return KafkaMessage.of(transcription.getId(), transcription);
-    }
-
-    private Transcription createTranscription() {
-        return new Transcription(getId(), getSentence());
     }
 
     private String getId() {

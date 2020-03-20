@@ -26,7 +26,7 @@ public class TranscriptionProcessor {
     }
 
     @Incoming("transcription-states")
-    public CompletionStage<Void> processTranscriptionState(KafkaMessage<String, Transcription> message) {
+    public CompletionStage<Void> processTranscriptionState(KafkaMessage<String, TranscriptionState> message) {
         return CompletableFuture.runAsync(() -> {
             try {
                 Thread.sleep((long)(Math.random() * 2000));
@@ -34,7 +34,7 @@ public class TranscriptionProcessor {
                 LOGGER.error("Sleep was interrupted", e);
             }
             LOGGER.info("Processing transcription state from partition {}: {} - {}",
-                message.getPartition(), message.getPayload().getId(), "State");
+                message.getPartition(), message.getPayload().getId(), message.getPayload().getState());
         });
     }
 }

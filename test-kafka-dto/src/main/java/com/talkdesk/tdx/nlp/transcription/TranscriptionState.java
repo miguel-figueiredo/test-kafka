@@ -1,21 +1,23 @@
 package com.talkdesk.tdx.nlp.transcription;
 
-import java.util.*;
-
 public class TranscriptionState {
     private String id;
-    List<String> state;
+    private String state;
+
+    private TranscriptionState() {
+        // Used for deserialization
+    }
 
     public TranscriptionState(String id) {
         this.id = id;
-        this.state = new ArrayList<>();
+        this.state = "State";
     }
 
     public String getId() {
         return id;
     }
 
-    public List<String> getState() {
+    public String getState() {
         return state;
     }
 }
