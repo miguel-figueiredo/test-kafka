@@ -1,6 +1,5 @@
 package com.talkdesk.tdx.nlp.transcription;
 
-import io.vertx.core.json.JsonObject;
 import java.io.*;
 
 public class Transcription implements Serializable {

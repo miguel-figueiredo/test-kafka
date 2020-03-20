@@ -23,6 +23,7 @@
   <modules>
     <module>test-kafka-producer</module>
     <module>test-kafka-consumer</module>
+      <module>test-kafka-dto</module>
   </modules>
 
   <dependencyManagement>

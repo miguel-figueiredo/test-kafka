@@ -38,3 +38,23 @@ services:
       KAFKA_BROKERCONNECT: ${DOCKER_HOST_IP:-127.0.0.1}:9092
     ports:
       - "9000:9000"
+  kafka-producer:
+    build:
+      context: ./test-kafka-producer
+      dockerfile: src/main/docker/Dockerfile.jvm
+    hostname: kafka-producer
+    image: test-kafka-producer
+    environment:
+      KAFKA_SERVERS: ${DOCKER_HOST_IP:-127.0.0.1}:9092
+    depends_on:
+      - kafka1
+  kafka-consumer:
+    build:
+      context: ./test-kafka-consumer
+      dockerfile: src/main/docker/Dockerfile.jvm
+    hostname: kafka-consumer
+    image: test-kafka-consumer
+    environment:
+      KAFKA_SERVERS: ${DOCKER_HOST_IP:-127.0.0.1}:9092
+    depends_on:
+      - kafka1
