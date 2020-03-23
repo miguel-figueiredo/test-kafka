@@ -20,4 +20,12 @@ public class TranscriptionState {
     public String getState() {
         return state;
     }
+
+    @Override
+    public String toString() {
+        return "TranscriptionState{" +
+            "id='" + id + '\'' +
+            ", state='" + state + '\'' +
+            '}';
+    }
 }

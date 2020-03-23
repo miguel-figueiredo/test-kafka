@@ -7,4 +7,4 @@ until (echo dump | nc localhost 2181 | grep brokers); do sleep 1; done
 kafka-topics --create --topic transcriptions -zookeeper localhost:2181 --replication-factor 1 --partitions 4
 kafka-topics --create --topic transcription-states -zookeeper localhost:2181 --replication-factor 1 --partitions 4
 
-docker-compose up kafka-producer kafka-consumer
+docker-compose up --scale kafka-consumer=4 kafka-producer kafka-consumer

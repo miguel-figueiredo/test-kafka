@@ -22,4 +22,12 @@ public class Transcription implements Serializable {
     public String getText() {
         return text;
     }
+
+    @Override
+    public String toString() {
+        return "Transcription{" +
+            "id='" + id + '\'' +
+            ", text='" + text + '\'' +
+            '}';
+    }
 }

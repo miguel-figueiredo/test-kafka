@@ -3,7 +3,6 @@ package com.talkdesk.tdx.nlp.transcription;
 
 import com.github.javafaker.Faker;
 import io.reactivex.Flowable;
-import io.reactivex.flowables.ConnectableFlowable;
 import io.smallrye.reactive.messaging.kafka.KafkaMessage;
 import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.*;
@@ -16,7 +15,7 @@ public class TranscriptionGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TranscriptionGenerator.class);
 
-    Flowable<String> publisher = Flowable.interval(1, TimeUnit.SECONDS).map(tick -> getId()).share();
+    Flowable<String> publisher = Flowable.interval(5, TimeUnit.SECONDS).map(tick -> getId()).share();
 
     @Outgoing("generated-transcription")
     public Flowable<KafkaMessage<String, Transcription>> generateTranscription() {
