@@ -10,7 +10,12 @@ public class TranscriptionState {
 
     public TranscriptionState(String id) {
         this.id = id;
-        this.state = "State";
+        this.state = "";
+    }
+
+    public TranscriptionState(String id, String state) {
+        this.id = id;
+        this.state = state;
     }
 
     public String getId() {
