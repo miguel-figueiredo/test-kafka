@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transcriptions</title>
+
+  <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+  <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Transcriptions</h2>
+    <ul id="transcriptions"></ul>
+  </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var source = new EventSource("/transcriptions/stream");
+    source.onmessage = function (event) {
+        let data = JSON.parse(event.data);
+        let id = data.id.replace(/ /g, '_');
+        let item = document.getElementById(id);
+        if(item){
+          item.innerHTML = event.data;
+        }
+        else {
+          let list = document.getElementById("transcriptions");
+          list.innerHTML += "<li id=" + id + ">" + event.data + "</li>";
+        }
+    };
+</script>
+</html>

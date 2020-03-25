@@ -20,7 +20,7 @@ public class TranscriptionGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TranscriptionGenerator.class);
 
-    Flowable<String> publisher = Flowable.interval(15, TimeUnit.SECONDS).map(tick -> getId()).share();
+    Flowable<String> publisher = Flowable.interval(5, TimeUnit.SECONDS).map(tick -> getId()).share();
     Set<String> generatedIds = new HashSet<>();
 
     void onStart(@Observes StartupEvent ev) {
