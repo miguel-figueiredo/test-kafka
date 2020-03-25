@@ -1,5 +1,6 @@
 package com.talkdesk.tdx.nlp.transcription;
 
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionStateDeserializer;
 import io.quarkus.kafka.client.serialization.ObjectMapperSerializer;
 import java.util.*;
 import org.apache.kafka.common.serialization.Deserializer;

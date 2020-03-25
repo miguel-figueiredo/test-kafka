@@ -1,5 +1,7 @@
 package com.talkdesk.tdx.nlp.transcription;
 
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionSerde;
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionStateSerde;
 import javax.enterprise.context.*;
 import javax.enterprise.inject.Produces;
 import org.apache.kafka.common.serialization.Serde;
@@ -12,9 +14,6 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.ValueJoiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 @ApplicationScoped
 public class TranscriptionStateJoin {

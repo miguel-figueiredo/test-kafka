@@ -56,5 +56,7 @@ services:
     image: test-kafka-consumer
     environment:
       KAFKA_SERVERS: ${DOCKER_HOST_IP:-127.0.0.1}:9092
+    ports:
+      - "8080:8080"
     depends_on:
       - kafka1

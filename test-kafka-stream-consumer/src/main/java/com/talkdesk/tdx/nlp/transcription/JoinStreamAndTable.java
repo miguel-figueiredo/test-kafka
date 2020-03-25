@@ -1,6 +1,7 @@
 package com.talkdesk.tdx.nlp.transcription;
 
-import java.time.Duration;
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionSerde;
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionStateSerde;
 import java.util.*;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -9,12 +10,8 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology.AutoOffsetReset;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.JoinWindows;
-import org.apache.kafka.streams.kstream.Joined;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Predicate;
-import org.apache.kafka.streams.kstream.StreamJoined;
 import org.apache.kafka.streams.kstream.ValueJoiner;
 
 public class JoinStreamAndTable {

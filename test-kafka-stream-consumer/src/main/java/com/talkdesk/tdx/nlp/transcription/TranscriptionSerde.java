@@ -1,9 +1,7 @@
 package com.talkdesk.tdx.nlp.transcription;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JacksonUtils;
+import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionDeserializer;
 import io.quarkus.kafka.client.serialization.ObjectMapperSerializer;
-import java.io.*;
 import java.util.*;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
