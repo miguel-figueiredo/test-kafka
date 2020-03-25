@@ -6,6 +6,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.SynchronousQueue;
 import javax.enterprise.context.*;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,14 +15,13 @@ public class StatefulTranscriptionProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatefulTranscriptionProcessor.class);
 
     @Incoming("stateful-transcriptions")
-    public CompletionStage<Void> processTranscription(KafkaMessage<String, StatefulTranscription> message) {
-        return CompletableFuture.runAsync(() -> {
-            StatefulTranscription transcription = message.getPayload();
-            String key = message.getKey();
-            LOGGER.info("Processing stateful transcription from partition {}: {} - {} - {}",
-                message.getPartition(), transcription.getId(), transcription.getText(), transcription.getState());
+    @Outgoing("generated-transcription-state")
+    public KafkaMessage<String, TranscriptionState> processTranscription(StatefulTranscription statefulTranscription) {
+        LOGGER.info("Processing stateful transcription from partition {}", statefulTranscription);
 
-            // TODO: generate new state
-        });
+        TranscriptionState state = new TranscriptionState(statefulTranscription.getId(),
+            statefulTranscription.getState() + " " + statefulTranscription.getText());
+
+        return KafkaMessage.of(statefulTranscription.getId(), state);
     }
 }

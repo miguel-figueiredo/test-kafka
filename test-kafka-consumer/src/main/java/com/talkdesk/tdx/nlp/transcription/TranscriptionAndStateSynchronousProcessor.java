@@ -15,7 +15,7 @@ public class TranscriptionAndStateSynchronousProcessor {
 
     private SynchronousQueue<TranscriptionState> states = new SynchronousQueue<>();
 
-    @Incoming("transcriptions")
+    //@Incoming("transcriptions")
     public CompletionStage<Void> processTranscription(KafkaMessage<String, Transcription> message) {
         return CompletableFuture.runAsync(() -> {
             //sleep();
@@ -40,7 +40,7 @@ public class TranscriptionAndStateSynchronousProcessor {
         LOGGER.info("Transcription and state received.");
     }
 
-    @Incoming("transcription-states")
+    //@Incoming("transcription-states")
     public CompletionStage<Void> processTranscriptionState(KafkaMessage<String, TranscriptionState> message) {
         return CompletableFuture.runAsync(() -> {
             //  sleep();

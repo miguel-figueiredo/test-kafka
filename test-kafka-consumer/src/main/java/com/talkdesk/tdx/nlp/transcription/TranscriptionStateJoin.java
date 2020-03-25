@@ -1,5 +1,6 @@
 package com.talkdesk.tdx.nlp.transcription;
 
+import com.talkdesk.tdx.nlp.transcription.serialization.StatefulTranscriptionSerde;
 import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionSerde;
 import com.talkdesk.tdx.nlp.transcription.serialization.TranscriptionStateSerde;
 import javax.enterprise.context.*;
@@ -22,6 +23,7 @@ public class TranscriptionStateJoin {
     public Topology buildTopology() {
         Serde<Transcription> transcriptionSerde = new TranscriptionSerde();
         Serde<TranscriptionState> transcriptionStateSerde = new TranscriptionStateSerde();
+        Serde<StatefulTranscription> statefulTranscriptionSerde = new StatefulTranscriptionSerde();
         Serde<String> stringSerde = Serdes.String();
 
         StreamsBuilder builder = new StreamsBuilder();
@@ -32,12 +34,12 @@ public class TranscriptionStateJoin {
         KTable<String, TranscriptionState> transcriptionStateTable = builder.table("transcription-states",
             Consumed.with(stringSerde, transcriptionStateSerde).withOffsetResetPolicy(AutoOffsetReset.EARLIEST));
 
-        ValueJoiner<Transcription, TranscriptionState, TranscriptionState> joiner = new TranscriptionStateJoiner();
+        ValueJoiner<Transcription, TranscriptionState, StatefulTranscription> joiner = new TranscriptionStateJoiner();
 
-        KStream<String, TranscriptionState> joinedStream = transcriptionStream.join(
+        KStream<String, StatefulTranscription> joinedStream = transcriptionStream.join(
             transcriptionStateTable, joiner);
 
-        joinedStream.to("transcription-states", Produced.with(stringSerde, transcriptionStateSerde));
+        joinedStream.to("stateful-transcriptions", Produced.with(stringSerde, statefulTranscriptionSerde));
 
         return builder.build();
     }

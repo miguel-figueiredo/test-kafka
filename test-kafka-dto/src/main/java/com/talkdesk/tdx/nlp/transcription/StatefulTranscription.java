@@ -37,4 +37,13 @@ public class StatefulTranscription {
     public String getId(){
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "StatefulTranscription{" +
+            "id='" + id + '\'' +
+            ", text='" + text + '\'' +
+            ", state='" + state + '\'' +
+            '}';
+    }
 }
