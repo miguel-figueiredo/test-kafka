@@ -6,36 +6,38 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.SynchronousQueue;
 import javax.enterprise.context.*;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
-public class TranscriptionProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TranscriptionProcessor.class);
+public class TranscriptionAndStateSynchronousProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TranscriptionAndStateSynchronousProcessor.class);
 
     private SynchronousQueue<TranscriptionState> states = new SynchronousQueue<>();
 
     @Incoming("transcriptions")
-    @Outgoing("generated-transcription-state")
-    public KafkaMessage<String, TranscriptionState> processTranscription(Transcription transcription) {
-        String id = transcription.getId();
-        LOGGER.info("Processing transcription : {} - {}",
-            transcription.getId(), transcription.getText());
+    public CompletionStage<Void> processTranscription(KafkaMessage<String, Transcription> message) {
+        return CompletableFuture.runAsync(() -> {
+            //sleep();
+            Transcription transcription = message.getPayload();
+            String key = message.getKey();
+            LOGGER.info("Processing transcription from partition {}: {} - {}",
+                message.getPartition(), transcription.getId(), transcription.getText());
+            //waitForState(transcription);
+        });
+    }
+
+    private void waitForState(Transcription transcription) {
         try {
             TranscriptionState state = states.take();
-            return createMessage(transcription, state);
+            sendMessage(transcription, state);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    private KafkaMessage<String, TranscriptionState> createMessage(Transcription transcription, TranscriptionState state) {
-        TranscriptionState newState = new TranscriptionState(transcription.getId(),
-            state.getState() + "\n" +transcription.getText());
-        LOGGER.info("Sending message {}", newState);
-        return KafkaMessage.of(transcription.getId(), newState);
+    private void sendMessage(Transcription transcription, TranscriptionState state) {
+        LOGGER.info("Transcription and state received.");
     }
 
     @Incoming("transcription-states")
@@ -46,12 +48,16 @@ public class TranscriptionProcessor {
             String key = message.getKey();
             LOGGER.info("Processing transcription state from partition {}: {} - {}",
                 message.getPartition(), transcriptionState.getId(), transcriptionState.getState());
-            try {
-                states.put(transcriptionState);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            //waitForTranscription(transcriptionState);
         });
+    }
+
+    private void waitForTranscription(TranscriptionState transcriptionState) {
+        try {
+            states.put(transcriptionState);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void sleep() {

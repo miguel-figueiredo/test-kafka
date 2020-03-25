@@ -39,12 +39,14 @@ public class TranscriptionGenerator {
 
     private KafkaMessage<String, Transcription> getTranscription(String id) {
         Transcription transcription = new Transcription(id, getSentence());
+        LOGGER.info("Generating transcription: {}", transcription);
         return KafkaMessage.of(transcription.getId(), transcription);
     }
 
     private KafkaMessage<String, TranscriptionState> getTranscriptionState(String id) {
-        TranscriptionState transcription = new TranscriptionState(id);
-        return KafkaMessage.of(transcription.getId(), transcription);
+        TranscriptionState transcriptionState = new TranscriptionState(id);
+        LOGGER.info("Generating transcription state: {}", transcriptionState);
+        return KafkaMessage.of(transcriptionState.getId(), transcriptionState);
     }
 
     private String getId() {

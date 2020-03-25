@@ -2,7 +2,7 @@ package com.talkdesk.tdx.nlp.transcription;
 
 import java.io.*;
 
-public class Transcription implements Serializable {
+public class Transcription {
     private String id;
     private String text;
 

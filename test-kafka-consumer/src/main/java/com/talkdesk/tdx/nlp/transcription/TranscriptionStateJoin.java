@@ -12,6 +12,9 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.ValueJoiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
 
 @ApplicationScoped
 public class TranscriptionStateJoin {
@@ -28,7 +31,7 @@ public class TranscriptionStateJoin {
             Consumed.with(stringSerde, transcriptionSerde));
 
         KTable<String, TranscriptionState> transcriptionStateTable = builder.table("transcription-states",
-            Consumed.with(stringSerde, transcriptionStateSerde).withOffsetResetPolicy(AutoOffsetReset.LATEST));
+            Consumed.with(stringSerde, transcriptionStateSerde).withOffsetResetPolicy(AutoOffsetReset.EARLIEST));
 
         ValueJoiner<Transcription, TranscriptionState, TranscriptionState> joiner = new TranscriptionStateJoiner();
 
