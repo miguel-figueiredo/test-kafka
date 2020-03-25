@@ -15,7 +15,7 @@ public class StatefulTranscriptionProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(StatefulTranscriptionProcessor.class);
 
     @Incoming("stateful-transcriptions")
-    @Outgoing("generated-transcription-state")
+    @Outgoing("transcription-states")
     public KafkaMessage<String, TranscriptionState> processTranscription(StatefulTranscription statefulTranscription) {
         LOGGER.info("Processing stateful transcription from partition {}", statefulTranscription);
 
