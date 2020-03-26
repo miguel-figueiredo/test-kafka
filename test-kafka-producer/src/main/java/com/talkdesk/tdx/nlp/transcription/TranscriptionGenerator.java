@@ -6,8 +6,11 @@ import io.quarkus.runtime.StartupEvent;
 import io.reactivex.Flowable;
 import io.smallrye.reactive.messaging.kafka.KafkaMessage;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.enterprise.context.*;
 import javax.enterprise.event.Observes;
 import org.apache.commons.lang3.RandomUtils;
@@ -20,11 +23,12 @@ public class TranscriptionGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TranscriptionGenerator.class);
 
-    Flowable<String> publisher = Flowable.interval(5, TimeUnit.SECONDS).map(tick -> getId()).share();
-    Set<String> generatedIds = new HashSet<>();
+    Flowable<String> publisher = Flowable.interval(getInterval(), TimeUnit.MILLISECONDS).map(tick -> getId()).share();
+
+    Map<String, Long> generatedIds = new ConcurrentHashMap<>();
 
     void onStart(@Observes StartupEvent ev) {
-        publisher.subscribe(i -> generatedIds.add(i));
+        publisher.subscribe(i -> generatedIds.putIfAbsent(i, 0L));
     }
 
     @Outgoing("generated-transcription")
@@ -34,11 +38,11 @@ public class TranscriptionGenerator {
 
     @Outgoing("generated-transcription-state")
     public Flowable<KafkaMessage<String, TranscriptionState>> generateTranscriptionState() {
-        return publisher.filter(id -> !generatedIds.contains(id)).map(id -> getTranscriptionState(id));
+        return publisher.filter(id -> !generatedIds.containsKey(id)).map(id -> getTranscriptionState(id));
     }
 
     private KafkaMessage<String, Transcription> getTranscription(String id) {
-        Transcription transcription = new Transcription(id, getSentence());
+        Transcription transcription = new Transcription(id, getSentence(id));
         LOGGER.info("Generating transcription: {}", transcription);
         return KafkaMessage.of(transcription.getId(), transcription);
     }
@@ -55,7 +59,16 @@ public class TranscriptionGenerator {
         return id;
     }
 
+    private String getSentence(String id){
+        Long sentence = generatedIds.computeIfPresent(id, (s, l) -> ++l);
+        return sentence == null ? "1" : sentence.toString();
+    }
+
     private String getSentence() {
         return new Faker().dune().saying();
+    }
+
+    private int getInterval() {
+        return Integer.parseInt(System.getenv("INTERVAL"));
     }
 }

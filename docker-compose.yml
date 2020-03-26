@@ -46,6 +46,8 @@ services:
     image: test-kafka-producer
     environment:
       KAFKA_SERVERS: ${DOCKER_HOST_IP:-127.0.0.1}:9092
+      # Message generation interval in milliseconds
+      INTERVAL: ${INTERVAL:-1000}
     depends_on:
       - kafka1
   # Note: a hostname must not be defined in order to create replicas with different hostnames
@@ -57,7 +59,8 @@ services:
     environment:
       KAFKA_SERVERS: ${DOCKER_HOST_IP:-127.0.0.1}:9092
     ports:
-      # Allow dynamic ports when running multiple instances with scale
-      - "8080-8084:8080"
+      # Allows dynamic ports when running multiple instances with scale
+      # Scales up to four containers
+      - "8080-8083:8080"
     depends_on:
       - kafka1

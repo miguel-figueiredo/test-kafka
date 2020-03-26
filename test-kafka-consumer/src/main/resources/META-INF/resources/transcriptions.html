@@ -17,18 +17,23 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-    var source = new EventSource("/transcriptions/stream");
-    source.onmessage = function (event) {
-        let data = JSON.parse(event.data);
-        let id = data.id.replace(/ /g, '_');
-        let item = document.getElementById(id);
-        if(item){
-          item.innerHTML = event.data;
-        }
-        else {
-          let list = document.getElementById("transcriptions");
-          list.innerHTML += "<li id=" + id + ">" + event.data + "</li>";
-        }
-    };
+    let register = function(url) {
+      let source = new EventSource(url + "/transcriptions/stream");
+      source.onmessage = function (event) {
+          let data = JSON.parse(event.data);
+          let id = data.id.replace(/ /g, '_');
+          let item = document.getElementById(id);
+          if(item){
+            item.innerHTML = event.data;
+          }
+          else {
+            let list = document.getElementById("transcriptions");
+            list.innerHTML += "<li id=" + id + ">" + event.data + "</li>";
+          }
+      };
+    }
+
+    let urls = ["http://localhost:8080", "http://localhost:8081", "http://localhost:8082", "http://localhost:8083"];
+    urls.map(register);
 </script>
 </html>
