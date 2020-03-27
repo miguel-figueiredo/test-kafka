@@ -2,7 +2,8 @@
 
 function show_help {
   cat <<EOF
-Usage: run.sh [-b] [-k] [-c] [-p] [-x] [-h]
+Usage: run.sh [-a] [-b] [-k] [-c] [-p] [-x] [-h]
+-a: Run all
 -b: Build
 -k: Run Kafka
 -p: Run producer
@@ -44,7 +45,7 @@ export DOCKER_HOST_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -
 
 operations=()
 
-while getopts "bkpPcCxh" OPTION; do
+while getopts "abkpPcCxh" OPTION; do
     case $OPTION in
     b)
         operations+=(build)
@@ -66,11 +67,20 @@ while getopts "bkpPcCxh" OPTION; do
         show_help
         exit 0
         ;;
-    *)
+    a)
         operations=(build run_kafka run_producer run_consumer)
+        ;;
+    *)
+        show_help
+        exit 1
         ;;
     esac
 done
+
+if [ -z $operations ];then
+  show_help
+  exit 1
+fi
 
 for operation in ${operations[@]}; do
   $operation
