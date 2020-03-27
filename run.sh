@@ -10,8 +10,6 @@ Usage: run.sh [-a] [-b] [-k] [-c] [-p] [-x] [-h]
 -c: Run consumer
 -x: Stops continers and clean data
 -h: Shows this help
-
-If no options are provided the script executes the build and runs all the containers.
 EOF
 }
 
