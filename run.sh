@@ -8,7 +8,7 @@ Usage: run.sh [-a] [-b] [-k] [-c] [-p] [-x] [-h]
 -k: Run Kafka
 -p: Run producer
 -c: Run consumer
--x: Stops continers and clean data
+-x: Stops containers and clean data
 -h: Shows this help
 EOF
 }
