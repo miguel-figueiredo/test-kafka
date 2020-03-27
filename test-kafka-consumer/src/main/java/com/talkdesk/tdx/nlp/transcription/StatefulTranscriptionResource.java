@@ -1,7 +1,5 @@
-package com.talkdesk.tdx.nlp.transcription.serialization;
+package com.talkdesk.tdx.nlp.transcription;
 
-import com.talkdesk.tdx.nlp.transcription.StatefulTranscription;
-import com.talkdesk.tdx.nlp.transcription.Transcription;
 import io.smallrye.reactive.messaging.annotations.Channel;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
