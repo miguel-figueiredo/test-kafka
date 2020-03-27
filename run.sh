@@ -56,7 +56,7 @@ while getopts "bkpPcCxh" OPTION; do
         operations+=(run_producer)
         ;;
     c)
-        operations+=(run_producer)
+        operations+=(run_consumer)
         ;;
     x)
         clean
@@ -67,7 +67,7 @@ while getopts "bkpPcCxh" OPTION; do
         exit 0
         ;;
     *)
-        operations=(build run_kafka run_producer run_consumer tail_producer tail_consumer)
+        operations=(build run_kafka run_producer run_consumer)
         ;;
     esac
 done
