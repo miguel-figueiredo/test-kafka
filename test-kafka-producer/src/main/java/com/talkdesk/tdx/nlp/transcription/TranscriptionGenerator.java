@@ -8,12 +8,8 @@ import io.smallrye.reactive.messaging.kafka.KafkaMessage;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.enterprise.context.*;
 import javax.enterprise.event.Observes;
-import org.apache.commons.lang3.RandomUtils;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +65,7 @@ public class TranscriptionGenerator {
     }
 
     private int getInterval() {
-        return Integer.parseInt(System.getenv("INTERVAL"));
+        String interval = System.getenv("INTERVAL");
+        return Integer.parseInt(interval == null ? "1000" : interval);
     }
 }

@@ -21,7 +21,7 @@ mvn quarkus:dev -Dquarkus.http.port=8081
 
 ## Webpages
 
-Application: http://localhost:8080/transcritptions.html
+Application: http://localhost:8080/transcriptions.html
 
 ## Useful commands
 

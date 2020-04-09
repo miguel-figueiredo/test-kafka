@@ -1,5 +1,7 @@
 package com.talkdesk.tdx.nlp.transcription;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class TranscriptionState {
     private String id;
     private String state;
@@ -24,6 +26,22 @@ public class TranscriptionState {
 
     public String getState() {
         return state;
+    }
+
+    @JsonIgnore
+    public boolean isValid() {
+        String[] stateArray = state.trim().split(" ");
+        if (stateArray.length < 2) {
+            return true;
+        }
+
+        for (int i = 1; i < stateArray.length; i++) {
+            if (Integer.valueOf(stateArray[i]) != Integer.valueOf(stateArray[i - 1]) + 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

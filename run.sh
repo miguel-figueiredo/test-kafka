@@ -35,7 +35,7 @@ function run_consumer {
 
 function clean {
   docker-compose stop
-  docker-compose rm
+  docker-compose rm -f
   rm -rf zk-single-kafka-single
 }
 
