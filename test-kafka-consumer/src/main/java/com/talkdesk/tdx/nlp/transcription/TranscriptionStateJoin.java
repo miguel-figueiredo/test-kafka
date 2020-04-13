@@ -23,7 +23,7 @@ import org.apache.kafka.streams.kstream.ValueJoiner;
 @ApplicationScoped
 public class TranscriptionStateJoin {
 
-    //    @Produces
+    //@Produces
     public Topology buildStreamTableJoinTopology() {
         Serde<Transcription> transcriptionSerde = new TranscriptionSerde();
         Serde<TranscriptionState> transcriptionStateSerde = new TranscriptionStateSerde();

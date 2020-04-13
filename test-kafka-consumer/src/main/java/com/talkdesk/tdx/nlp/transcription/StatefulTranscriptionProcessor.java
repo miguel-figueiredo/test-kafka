@@ -22,24 +22,26 @@ public class StatefulTranscriptionProcessor {
     Emitter<KafkaMessage<String, TranscriptionState>> emmiEmitter;
 
     @Incoming("stateful-transcriptions")
-    public void processTranscription(StatefulTranscription statefulTranscription) {
-        LOGGER.info("Processing stateful transcription from partition {}", statefulTranscription);
+    public CompletableFuture<Void> processTranscription(StatefulTranscription statefulTranscription) {
+        return CompletableFuture.runAsync(() -> {
+            LOGGER.info("Processing stateful transcription from partition {}", statefulTranscription);
 
-        TranscriptionState state = new TranscriptionState(statefulTranscription.getId(),
-            statefulTranscription.getState() + " " + statefulTranscription.getText());
+            TranscriptionState state = new TranscriptionState(statefulTranscription.getId(),
+                statefulTranscription.getState() + " " + statefulTranscription.getText());
 
-        LOGGER.info("State: {}", state.getState());
+            LOGGER.info("State: {}", state.getState());
 
-        if(state.isValid()){
-            sleep();
-            LOGGER.info("Sending state transcription: {}", state);
-            emmiEmitter.send(KafkaMessage.of(statefulTranscription.getId(), state));
-        }
+            if (state.isValid()) {
+                sleep();
+                LOGGER.info("Sending state transcription: {}", state);
+                emmiEmitter.send(KafkaMessage.of(statefulTranscription.getId(), state));
+            }
+        });
     }
 
     private void sleep() {
         try {
-            Thread.sleep((long) (Math.random() * 3000));
+            Thread.sleep(getInterval());
         } catch (InterruptedException e) {
             LOGGER.error("Sleep was interrupted", e);
         }

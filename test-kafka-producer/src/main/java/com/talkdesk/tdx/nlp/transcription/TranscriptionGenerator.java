@@ -1,15 +1,12 @@
 package com.talkdesk.tdx.nlp.transcription;
 
 
-import com.github.javafaker.Faker;
-import io.quarkus.runtime.StartupEvent;
 import io.reactivex.Flowable;
 import io.smallrye.reactive.messaging.kafka.KafkaMessage;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.*;
-import javax.enterprise.event.Observes;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +18,14 @@ public class TranscriptionGenerator {
 
     Flowable<String> publisher = Flowable.interval(getInterval(), TimeUnit.MILLISECONDS).map(tick -> getId()).share();
 
-    Map<String, Long> generatedIds = new ConcurrentHashMap<>();
+    List<String> ids = Arrays.asList("A", "B", "C", "D");
 
-    void onStart(@Observes StartupEvent ev) {
-        publisher.subscribe(i -> generatedIds.putIfAbsent(i, 0L));
+    Map<String, Long> generatedTextById = new ConcurrentHashMap<>();
+
+    public TranscriptionGenerator() {
+        for(String id : ids){
+            generatedTextById.put(id, 0L);
+        }
     }
 
     @Outgoing("generated-transcription")
@@ -34,11 +35,11 @@ public class TranscriptionGenerator {
 
     @Outgoing("generated-transcription-state")
     public Flowable<KafkaMessage<String, TranscriptionState>> generateTranscriptionState() {
-        return publisher.filter(id -> !generatedIds.containsKey(id)).map(id -> getTranscriptionState(id));
+        return publisher.filter(id -> generatedTextById.get(id) == 1L).map(id -> getTranscriptionState(id));
     }
 
     private KafkaMessage<String, Transcription> getTranscription(String id) {
-        Transcription transcription = new Transcription(id, getSentence(id));
+        Transcription transcription = new Transcription(id, getText(id));
         LOGGER.info("Generating transcription: {}", transcription);
         return KafkaMessage.of(transcription.getId(), transcription);
     }
@@ -50,18 +51,11 @@ public class TranscriptionGenerator {
     }
 
     private String getId() {
-        String id = new Faker().dune().planet();
-        LOGGER.info("Generated ID: {}", id);
-        return id;
+        return ids.get((int) (Math.random() * 10 % ids.size()));
     }
 
-    private String getSentence(String id){
-        Long sentence = generatedIds.computeIfPresent(id, (s, l) -> ++l);
-        return sentence == null ? "1" : sentence.toString();
-    }
-
-    private String getSentence() {
-        return new Faker().dune().saying();
+    private String getText(String id){
+        return generatedTextById.compute(id, (s, l) -> ++l).toString();
     }
 
     private int getInterval() {
